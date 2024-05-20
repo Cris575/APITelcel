@@ -1,0 +1,73 @@
+[{
+    "idCita": 1,
+    "fechaRegistro": "01/04/2024",
+    "fechaEntrega": "03/04/2024",
+    "motivoCita": "Reparacion de celular",
+    "horaCita": "16:00",
+    "estatusCita": "Atendida",
+    "idUsuarioC": 3,
+    "idUsuarioT": 2,
+    "dispositivos": [{
+        "idDispositivo": 1,
+        "marca": "Apple",
+        "modelo": "IPhone 12",
+        "caracteristicasHardware": "XXXX",
+        "fallas": "La pantalla se rompió y no deja hacer nada",
+        "fotosDispositivo": "../fotoDispositivo1.img"
+    }]
+  },
+  {
+    "idCita": 2,
+    "fechaRegistro": "17/04/2024",
+    "fechaEntrega": "23/04/2024",
+    "motivoCita": "Cambio de batería",
+    "horaCita": "10:00",
+    "estatusCita": "Atendida",
+    "idUsuarioC": 4,
+    "idUsuarioT": 2,
+    "dispositivos": [{
+        "idDispositivo": 1,
+        "marca": "Apple",
+        "modelo": "IPhone 11 Pro Max",
+        "caracteristicasHardware": "XXXX",
+        "fallas": "La batería carga muy lento y dura muy poco",
+        "fotosDispositivo": "../fotoDispositivo2.img"
+    }]
+  },
+  {
+    "idCita": 3,
+    "fechaRegistro": "19/04/2024",
+    "fechaEntrega": "25/04/2024",
+    "motivoCita": "Reparacion de celular",
+    "horaCita": "11:00",
+    "estatusCita": "Confirmada",
+    "idUsuarioC": 5,
+    "idUsuarioT": 2,
+    "dispositivos": [{
+        "idDispositivo": 1,
+        "marca": "Apple",
+        "modelo": "IPhone 13",
+        "caracteristicasHardware": "XXXX",
+        "fallas": "El puerto de carga no funciona, por lo que no deja cargar el celular",
+        "fotosDispositivo": "../fotoDispositivo3.img"
+    }]
+  },
+  {
+    "idCita": 4,
+    "fechaRegistro": "23/04/2024",
+    "fechaEntrega": "29/04/2024",
+    "motivoCita": "Limpieza de celular",
+    "horaCita": "17:00",
+    "estatusCita": "En espera de confirmación",
+    "idUsuarioC": 6,
+    "idUsuarioT": 2,
+    "dispositivos": [{
+        "idDispositivo": 1,
+        "marca": "Apple",
+        "modelo": "IPhone 13 Pro Max",
+        "caracteristicasHardware": "XXXX",
+        "fallas": "Los puertos estan muy sucios y les cuesta hacer que funcione cuando conecto un cable",
+        "fotosDispositivo": "../fotoDispositivo4.img"
+    }]
+  }
+]

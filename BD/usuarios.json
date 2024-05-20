@@ -1,0 +1,61 @@
+[{
+    "idUsuario": 1, 
+    "nombre": "Josue Eduardo",
+    "apellidos": "Garcia Garcia",
+    "fechaRegistro": "01/04/2024",
+    "email": "ejemplo1@something.com",
+    "password": "123.Hola",
+    "telefono": "1234567890",
+    "rolUsuario": "Administrador"
+  },
+  {
+    "idUsuario": 2, 
+    "nombre": "Carlos",
+    "apellidos": "Hernesto Perez",
+    "fechaRegistro": "01/04/2024",
+    "email": "ejemplo2@something.com",
+    "password": "123_Hola",
+    "telefono": "0987654321",
+    "rolUsuario": "Tecnico"
+  },
+  {
+    "idUsuario": 3, 
+    "nombre": "Ana Maria",
+    "apellidos": "Torres Mendez",
+    "fechaRegistro": "14/04/2024",
+    "email": "ejemplo3@something.com",
+    "password": "123-Hola",
+    "telefono": "123455432",
+    "rolUsuario": "Cliente"
+  },
+  {
+    "idUsuario": 4, 
+    "nombre": "Lucia",
+    "apellidos": "Martinez Lopez",
+    "fechaRegistro": "15/04/2024",
+    "email": "ejemplo4@something.com",
+    "password": "456.Adios",
+    "telefono": "0987654321",
+    "rolUsuario": "Cliente"
+  },
+  {
+    "idUsuario": 5, 
+    "nombre": "Carlos",
+    "apellidos": "Fernandez Ruiz",
+    "fechaRegistro": "22/04/2024",
+    "email": "ejemplo5@something.com",
+    "password": "789.HolaAdios",
+    "telefono": "1122334455",
+    "rolUsuario": "Cliente"
+  },
+  {
+    "idUsuario": 6, 
+    "nombre": "Ana",
+    "apellidos": "Perez Gomez",
+    "fechaRegistro": "29/04/2024",
+    "email": "ejemplo6@something.com",
+    "password": "101112.Saludo",
+    "telefono": "6677889900",
+    "rolUsuario": "Cliente"
+  }
+]
