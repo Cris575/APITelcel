@@ -59,8 +59,9 @@ async def registrar_cita(cita: GenerarCita):
 @app.get("/citas/", name="Obtener Todas las Citas")
 def read_all_items():
     citas = list(conexion.coleccion.find())
+    citas_converted = [{**cita, '_id': str(cita['_id'])} for cita in citas] # Convertir ObjectId a string
     if citas:
-        return citas
+        return citas_converted
     else:
         raise HTTPException(status_code=404, detail="No se encontraron citas")
     
