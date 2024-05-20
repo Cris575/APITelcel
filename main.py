@@ -386,7 +386,6 @@ def actualizar_dispositivo(
     modelo: str = None,
     característicasHardware: str = None,
     fallas: str = None,
-    fotosDispositivo: UploadFile = File(None)
 ):
     # Verificar si el dispositivo existe en la base de datos
     dispositivo_existente = conexion.dispositivos.find_one({"_id": idDispositivo})
