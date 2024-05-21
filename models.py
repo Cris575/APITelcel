@@ -11,8 +11,6 @@ class Dispositivo(BaseModel):
 
 class NuevaCita(BaseModel):
     id: int
-    fechaRegistro: str
-    fechaEntrega: str
     motivoCita: str
     horaCita: str
     estatusCita: str = "Pendiente"  
