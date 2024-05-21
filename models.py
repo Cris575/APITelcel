@@ -1,12 +1,24 @@
-from datetime import datetime
 from pydantic import BaseModel
-from typing import Optional
+from typing import List
 
-class GenerarCita(BaseModel):
-    nombreCliente: str
-    fechaCita: datetime
-    marcaDispositivo: str
-    modeloDispositivo: str
-    posibleFalla: Optional[str] = None  # Campo opcional con valor por defecto
-    estatus: Optional[str] = "pendiente"  # Establecer el valor por defecto # Agregar fecha de entrega como un atributo opcional
+class Dispositivo(BaseModel):
+    idDispositivo: int
+    marca: str
+    modelo: str
+    caracteristicasHardware: str
+    fallas: str
+    fotosDispositivo: str
 
+class NuevaCita(BaseModel):
+    id: int
+    fechaRegistro: str
+    fechaEntrega: str
+    motivoCita: str
+    horaCita: str
+    estatusCita: str = "Pendiente"  
+    idUsuarioC: int
+    idUsuarioT: int
+    dispositivos: List[Dispositivo]
+
+class ConfirmacionCita(BaseModel):
+    mensaje: str
