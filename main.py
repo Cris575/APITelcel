@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import NuevaCita, ConfirmacionCita
+from models import NuevaCita, ConfirmacionCita, Usuario
 from database import ConexionMongoDB
 from bson import json_util
 import json
@@ -132,6 +132,87 @@ async def obtener_cita(idCita: int):
 
     # Devolver los detalles completos de la cita
     return cita
+
+@app.post("/usuarios")
+async def crear_usuario(usuario: Usuario):
+    # Verificar si el usuario ya existe
+    if conexion_mongo.usuarios.find_one({"idUsuario": usuario.idUsuario}):
+        raise HTTPException(status_code=400, detail="El usuario ya existe")
+
+    # Generar la fecha de registro actual
+    fecha_registro = datetime.now().strftime("%d/%m/%Y")
+
+    # Convertir el usuario a un diccionario y agregar la fecha de registro
+    usuario_dict = usuario.dict()
+    usuario_dict["fechaRegistro"] = fecha_registro
+
+    # Insertar el usuario en la base de datos
+    usuario_id = conexion_mongo.usuarios.insert_one(usuario_dict).inserted_id
+
+    # Devolver una respuesta exitosa con el ID del nuevo usuario
+    return {"mensaje": "Usuario creado y guardado en MongoDB con éxito", "usuario_id": str(usuario_id)}
+
+@app.get("/usuarios")
+async def obtener_usuarios():
+    # Recuperar todos los usuarios de la base de datos
+    usuarios = list(conexion_mongo.usuarios.find({}, {
+        "_id": 0,
+        "idUsuario": 1,
+        "nombre": 1,
+        "apellidos": 1,
+        "telefono": 1,
+        "email": 1,
+        "password": 1,
+        "rolUsuario": 1
+    }))
+
+    # Construir la respuesta en el formato especificado
+    usuarios_formateados = [
+        {
+            "idUsuario": usuario["idUsuario"],
+            "nombre": usuario["nombre"],
+            "apellidos": usuario["apellidos"],
+            "telefono": usuario["telefono"],
+            "correoElectronico": usuario["email"],
+            "contraseña": usuario["password"],
+            "rol": usuario["rolUsuario"]
+        }
+        for usuario in usuarios
+    ]
+
+    respuesta = {"usuarios": usuarios_formateados}
+
+    return respuesta
+
+@app.get("/usuarios/{idUsuario}")
+async def obtener_usuario_por_id(idUsuario: int):
+    # Buscar el usuario por idUsuario en la base de datos
+    usuario = conexion_mongo.usuarios.find_one({"idUsuario": idUsuario}, {
+        "_id": 0,
+        "idUsuario": 1,
+        "nombre": 1,
+        "apellidos": 1,
+        "telefono": 1,
+        "email": 1,
+        "password": 1,
+        "rolUsuario": 1
+    })
+
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Construir la respuesta en el formato especificado
+    respuesta = {
+        "idUsuario": usuario["idUsuario"],
+        "nombre": usuario["nombre"],
+        "apellidos": usuario["apellidos"],
+        "telefono": usuario["telefono"],
+        "correoElectronico": usuario["email"],
+        "contraseña": usuario["password"],
+        "rol": usuario["rolUsuario"]
+    }
+
+    return respuesta
 
 if __name__ == '__main__':
     app.run(debug=True)

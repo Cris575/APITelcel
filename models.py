@@ -20,3 +20,12 @@ class NuevaCita(BaseModel):
 
 class ConfirmacionCita(BaseModel):
     mensaje: str
+
+class Usuario(BaseModel):
+    idUsuario: int
+    nombre: str
+    apellidos: str
+    email: str
+    password: str
+    telefono: str
+    rolUsuario: str
