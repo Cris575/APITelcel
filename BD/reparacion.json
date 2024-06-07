@@ -1,54 +1,67 @@
-[{
-    "idReparacion": 1, 
+[
+  {
+    "idReparacion": 1,
     "tipoReparacion": "Cambio de Pantalla",
     "detalles": "La pantalla esta rota por completo",
     "estatus": "Finalizada",
     "costoServicio": 200,
     "total": 500,
     "idCita": 1,
-    "idUsuarioC": 3,
-    "idUsuarioT": 2,
-    "idDispositivo": 1,
-    "refacciones": [{
+    "nombreCliente": "Ana Maria",
+    "nombreTécnico": "Hernesto Perez",
+    "idDispositivo": [
+      {
+        "idDispositivo": 1
+      }
+    ],
+    "refacciones": [
+      {
         "idRefaccion": 1,
-        "nombreRefaccion": "Pantalla para IPhone 12",
         "precio": 300,
-        "cantidad": 15,
-        "descripcion": "Refaccion de pantalla para IPhone 12",
-        "estatus": "En existencia"
-    }]
+        "cantidad": 1,
+        "subtotal": 300
+      }
+    ]
   },
   {
-    "idReparacion": 2, 
+    "idReparacion": 2,
     "tipoReparacion": "Cambio de Batería",
     "detalles": "La batería esta inflada y ya no sirve",
     "estatus": "En reparación",
     "costoServicio": 200,
     "total": 550,
     "idCita": 2,
-    "idUsuarioC": 4,
-    "idUsuarioT": 2,
-    "idDispositivo": 1,
-    "refacciones": [{
-        "idRefaccion": 1,
-        "nombreRefaccion": "Batería para IPhone 11 Pro Max",
+    "nombreCliente": "Lucia",
+    "nombreTécnico": "Hernesto Perez",
+    "idDispositivo": [
+      {
+        "idDispositivo": 1
+      }
+    ],
+    "refacciones": [
+      {
+        "idRefaccion": 2,
         "precio": 350,
-        "cantidad": 15,
-        "descripcion": "Batería para pantalla para IPhone 11 Pro Max",
-        "estatus": "En existencia"
-    }]
+        "cantidad": 1,
+        "subtotal": 350
+      }
+    ]
   },
   {
-    "idReparacion": 3, 
+    "idReparacion": 3,
     "tipoReparacion": "Reemplazo de puerto de carga",
     "detalles": "Aún no se confirma el estado del puerto de carga",
     "estatus": "Por confirmar reparación",
     "costoServicio": 0,
     "total": 0,
     "idCita": 3,
-    "idUsuarioC": 5,
-    "idUsuarioT": 2,
-    "idDispositivo": null,
+    "nombreCliente": "Carlos",
+    "nombreTécnico": "",
+    "idDispositivo": [
+      {
+        "idDispositivo": 1
+      }
+    ],
     "refacciones": []
   }
 ]

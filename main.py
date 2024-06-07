@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from models import NuevaCita, ConfirmacionCita, Usuario
+from models import NuevaCita, ConfirmacionCita, Usuario, DatosActualizados, CredencialesUsuario, Reparacion, NuevaRefaccion, ActualizarRefaccion
 from database import ConexionMongoDB
-from bson import json_util
+from bson import json_util, ObjectId
 import json
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
@@ -213,6 +213,220 @@ async def obtener_usuario_por_id(idUsuario: int):
     }
 
     return respuesta
+
+@app.put("/usuarios/{idUsuario}")
+async def actualizar_perfil_usuario(idUsuario: int, datos_actualizados: DatosActualizados):
+    # Verificar si el usuario existe en la base de datos
+    usuario_existente = conexion_mongo.usuarios.find_one({"idUsuario": idUsuario})
+    if not usuario_existente:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Actualizar los detalles del perfil del usuario
+    cambios_realizados = False
+    for campo, valor in datos_actualizados.dict().items():
+        if campo in usuario_existente and usuario_existente[campo] != valor:
+            conexion_mongo.usuarios.update_one(
+                {"idUsuario": idUsuario},
+                {"$set": {campo: valor}}
+            )
+            cambios_realizados = True
+
+    if cambios_realizados:
+        return {"estatus": True, "mensaje": "Perfil de usuario actualizado correctamente."}
+    else:
+        return {"estatus": False, "mensaje": "No se realizaron cambios en el perfil del usuario."}
+
+@app.post("/usuarios/validar")
+async def validar_credenciales(credenciales: CredencialesUsuario):
+    # Buscar el usuario por nombreUsuario en la base de datos
+    usuario = conexion_mongo.usuarios.find_one({"email": credenciales.email})
+    
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Verificar la contraseña
+    if usuario["password"] != credenciales.contraseña:
+        raise HTTPException(status_code=400, detail="Credenciales incorrectas")
+    
+    # Si las credenciales son válidas, devolver un mensaje de éxito
+    return {"estatus": True, "mensaje": "Credenciales validadas correctamente"}
+
+@app.post("/reparaciones")
+async def agregar_reparacion(reparacion: Reparacion):
+    # Generar un idReparacion único y autoincremental
+    ultimo_reparacion = conexion_mongo.reparacion.find_one(
+        sort=[("idReparacion", -1)]
+    )
+    nuevo_id_reparacion = 1 if ultimo_reparacion is None else ultimo_reparacion["idReparacion"] + 1
+
+    # Convertir la reparación a un diccionario
+    reparacion_dict = reparacion.dict()
+    reparacion_dict["idReparacion"] = nuevo_id_reparacion
+
+    # Convertir fechas a string para que sean compatibles con BSON
+    if "fechaInicio" in reparacion_dict:
+        reparacion_dict["fechaInicio"] = reparacion_dict["fechaInicio"].strftime("%Y-%m-%d")
+    if "fechaFin" in reparacion_dict:
+        reparacion_dict["fechaFin"] = reparacion_dict["fechaFin"].strftime("%Y-%m-%d")
+
+    # Verificar si la cita existe en la base de datos
+    cita = conexion_mongo.coleccion.find_one({"idCita": reparacion_dict["idCita"]})
+    if not cita:
+        raise HTTPException(status_code=404, detail="Cita no encontrada")
+
+    # Guardar la reparación en la base de datos
+    conexion_mongo.reparacion.insert_one(reparacion_dict)
+
+    # Devolver una respuesta exitosa
+    return {"estatus": True, "mensaje": "Reparación agregada exitosamente"}
+
+@app.get("/reparaciones")
+async def consultar_reparaciones():
+    # Consulta para recuperar las reparaciones
+    reparaciones_cursor = conexion_mongo.reparacion.find(
+        {"refacciones": {"$exists": True}},
+        {
+            "_id": 0,
+            "tipoReparacion": 1,
+            "detalles": 1,
+            "estatus": 1,
+            "costoServicio": 1,
+            "total": 1,
+            "idCita": 1,
+            "idUsuarioC": 1,
+            "idUsuarioT": 1,
+            "idDispositivo": 1,
+            "refacciones.idReparacion": 1,
+            "refacciones.idRefaccion": 1,
+            "refacciones.nombreRefaccion": 1,
+            "refacciones.precio": 1,
+            "refacciones.cantidad": 1,
+            "refacciones.descripcion": 1,
+            "refacciones.estatus": 1
+        }
+    )
+
+    # Convertir el cursor en una lista de reparaciones
+    reparaciones = list(reparaciones_cursor)
+
+    # Verificar si hay reparaciones
+    if not reparaciones:
+        return {"reparaciones": []}
+
+    return {"reparaciones": reparaciones}
+
+@app.get("/reparaciones/{idReparacion}")
+async def consultar_reparacion_por_id(idReparacion: int):
+    # Consulta para recuperar la reparación por su ID
+    reparacion = conexion_mongo.reparacion.find_one({"idReparacion": idReparacion})
+
+    # Verificar si la reparación existe
+    if not reparacion:
+        return {"mensaje": "Reparación no encontrada"}
+
+    # Convertir el ObjectId a str para que sea JSON serializable
+    reparacion["_id"] = str(reparacion["_id"])
+
+    # Devolver los datos de la reparación en un diccionario
+    return reparacion
+
+@app.put("/reparaciones/{idReparacion}")
+async def actualizar_reparacion(idReparacion: int, reparacion_data: dict):
+    # Verificar si la reparación existe en la base de datos
+    existing_reparacion = conexion_mongo.reparacion.find_one({"idReparacion": idReparacion})
+    if existing_reparacion is None:
+        raise HTTPException(status_code=404, detail="Reparación no encontrada")
+
+    # Crear un diccionario de actualización con los datos proporcionados en el cuerpo
+    update_data = {key: value for key, value in reparacion_data.items() if value is not None}
+
+    # Actualizar la reparación en la base de datos con los nuevos datos
+    conexion_mongo.reparacion.update_one({"idReparacion": idReparacion}, {"$set": update_data})
+
+    return {"mensaje": "Reparación actualizada exitosamente"}
+
+
+@app.post("/refacciones")
+async def agregar_refaccion(refaccion: NuevaRefaccion):
+    # Verificar si la reparación existe en la base de datos
+    reparacion = conexion_mongo.reparacion.find_one({"idReparacion": refaccion.idReparacion})
+    if not reparacion:
+        raise HTTPException(status_code=404, detail="La reparación no existe")
+
+    # Verificar si la refacción ya existe en el arreglo 'refacciones' de la reparación
+    refacciones_existentes = reparacion.get("refacciones", [])
+    for ref in refacciones_existentes:
+        if ref["idRefaccion"] == refaccion.idRefaccion:
+            raise HTTPException(status_code=400, detail="La refacción ya existe en la reparación")
+
+    # Agregar la nueva refacción al arreglo 'refacciones' del documento de reparación
+    conexion_mongo.reparacion.update_one(
+        {"idReparacion": refaccion.idReparacion},
+        {"$push": {"refacciones": refaccion.dict()}}
+    )
+
+    return {"estatus": True, "mensaje": "Refacción agregada exitosamente"}
+
+@app.get("/refacciones")
+async def consultar_refacciones():
+    # Consultar todas las reparaciones en la base de datos
+    reparaciones = list(conexion_mongo.reparacion.find({}, {"_id": 0}))
+
+    # Extraer las refacciones de cada reparación y agregarlas a una lista independiente
+    refacciones = []
+    for reparacion in reparaciones:
+        refacciones.extend(reparacion.get("refacciones", []))
+
+    return {"refacciones": refacciones}
+
+@app.get("/refacciones/{idReparacion}/{idRefaccion}")
+async def consultar_refaccion_por_id(idReparacion: int, idRefaccion: int):
+    # Consultar la reparación por su ID
+    reparacion = conexion_mongo.reparacion.find_one({"idReparacion": idReparacion}, {"_id": 0, "refacciones": 1})
+
+    # Verificar si la reparación existe
+    if not reparacion:
+        return {"mensaje": "Reparación no encontrada"}
+
+    # Obtener las refacciones de la reparación
+    refacciones = reparacion.get("refacciones", [])
+
+    # Buscar la refacción por su idRefaccion
+    refaccion_encontrada = next((refaccion for refaccion in refacciones if refaccion.get("idRefaccion") == idRefaccion), None)
+
+    if not refaccion_encontrada:
+        return {"mensaje": "Refacción no encontrada"}
+
+    return {"refaccion": refaccion_encontrada}
+
+@app.put("/refacciones/{idReparacion}/{idRefaccion}")
+async def actualizar_refaccion(idReparacion: int, idRefaccion: int, refaccion_actualizada: ActualizarRefaccion):
+    # Consultar la reparación que contiene la refacción
+    reparacion = conexion_mongo.reparacion.find_one({"idReparacion": idReparacion, "refacciones.idRefaccion": idRefaccion})
+
+    # Verificar si la reparación existe
+    if not reparacion:
+        raise HTTPException(status_code=404, detail="La reparación que contiene la refacción no fue encontrada")
+
+    # Buscar la refacción por su idRefaccion dentro de la lista de refacciones de la reparación
+    refaccion_index = next((index for index, refaccion in enumerate(reparacion["refacciones"]) if refaccion["idRefaccion"] == idRefaccion), None)
+
+    if refaccion_index is None:
+        raise HTTPException(status_code=404, detail="La refacción no fue encontrada en la reparación")
+
+    # Actualizar los datos de la refacción
+    conexion_mongo.reparacion.update_one(
+        {"idReparacion": idReparacion, "refacciones.idRefaccion": idRefaccion},
+        {"$set": {
+            f"refacciones.{refaccion_index}.nombreRefaccion": refaccion_actualizada.nombre,
+            f"refacciones.{refaccion_index}.cantidad": refaccion_actualizada.cantidad,
+            f"refacciones.{refaccion_index}.precio": refaccion_actualizada.precioUnitario
+        }}
+    )
+
+    return {"estatus": True, "mensaje": "Detalles de refacción actualizados correctamente"}
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,5 +1,6 @@
-[{
-    "idUsuario": 1, 
+[
+  {
+    "idUsuario": 1,
     "nombre": "Josue Eduardo",
     "apellidos": "Garcia Garcia",
     "fechaRegistro": "01/04/2024",
@@ -9,7 +10,7 @@
     "rolUsuario": "Administrador"
   },
   {
-    "idUsuario": 2, 
+    "idUsuario": 2,
     "nombre": "Carlos",
     "apellidos": "Hernesto Perez",
     "fechaRegistro": "01/04/2024",
@@ -19,7 +20,7 @@
     "rolUsuario": "Tecnico"
   },
   {
-    "idUsuario": 3, 
+    "idUsuario": 3,
     "nombre": "Ana Maria",
     "apellidos": "Torres Mendez",
     "fechaRegistro": "14/04/2024",
@@ -29,7 +30,7 @@
     "rolUsuario": "Cliente"
   },
   {
-    "idUsuario": 4, 
+    "idUsuario": 4,
     "nombre": "Lucia",
     "apellidos": "Martinez Lopez",
     "fechaRegistro": "15/04/2024",
@@ -39,7 +40,7 @@
     "rolUsuario": "Cliente"
   },
   {
-    "idUsuario": 5, 
+    "idUsuario": 5,
     "nombre": "Carlos",
     "apellidos": "Fernandez Ruiz",
     "fechaRegistro": "22/04/2024",
@@ -49,7 +50,7 @@
     "rolUsuario": "Cliente"
   },
   {
-    "idUsuario": 6, 
+    "idUsuario": 6,
     "nombre": "Ana",
     "apellidos": "Perez Gomez",
     "fechaRegistro": "29/04/2024",

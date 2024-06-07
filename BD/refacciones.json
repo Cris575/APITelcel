@@ -1,0 +1,18 @@
+[
+  {
+    "idRefaccion": 1,
+    "nombreRefaccion": "Pantalla para IPhone 12",
+    "precio": 300,
+    "cantidad": 15,
+    "descripcion": "Refaccion de pantalla para IPhone 12",
+    "estatus": "En existencia"
+  },
+  {
+    "idRefaccion": 2,
+    "nombreRefaccion": "Batería para IPhone 11 Pro Max",
+    "precio": 350,
+    "cantidad": 15,
+    "descripcion": "Batería para pantalla para IPhone 11 Pro Max",
+    "estatus": "En existencia"
+  }
+]

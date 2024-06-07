@@ -5,7 +5,7 @@ class ConexionMongoDB:
         self.cliente = MongoClient()
         self.bd = self.cliente.TelcelAPI
         self.coleccion = self.bd.citas
-        self.reparacion = self.bd.reparaciones
+        self.reparacion = self.bd.reparacion
         self.usuarios = self.bd.usuarios
     def cerrar(self):
         self.cliente.close()
